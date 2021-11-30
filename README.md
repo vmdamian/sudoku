@@ -1,5 +1,10 @@
 # Sudoku
 
+Project for the Mobile Computing subject, main contributors are:
+ - Andrei-Alexandru Brebu
+ - Mihai Iacov
+ - Mihai-Damian Visan
+
 ## Features:
 
 - written in Kotlin
