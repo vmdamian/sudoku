@@ -5,10 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
-import com.example.sudoku.databinding.FragmentMainMenuBinding
 import com.example.sudoku.databinding.FragmentSettingsBinding
 
 // TODO: Rename parameter arguments, choose names that match
@@ -55,6 +55,20 @@ class Settings : Fragment() {
         binding.buttonBackSettings.setOnClickListener {
             findNavController().navigate(R.id.action_settings_to_mainMenu)
         }
+
+        binding.volumeBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar, volume : Int, b: Boolean) {
+                binding.volumeText.text = "$volume"
+                // Max volume is 100 (set in the component), media player accepts 0 to 1.
+                (activity as MainActivity).player?.setVolume(volume.toFloat() / 100, volume.toFloat() / 100)
+            }
+
+            override fun onStartTrackingTouch(p0: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(p0: SeekBar?) {
+            }
+        })
 
         return binding.root
     }

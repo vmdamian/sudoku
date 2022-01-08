@@ -17,4 +17,6 @@
     <string name="lose_text">A disgrace! You lost!</string>
     <string name="game_text">This is the game. You choose!</string>
     <string name="dark_mode_setting">Dark Mode</string>
+    <string name="volume_setting">Music Volume</string>
+    <string name="default_volume_text">100</string>
 </resources>
