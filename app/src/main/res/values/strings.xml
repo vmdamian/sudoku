@@ -16,4 +16,5 @@
     <string name="win_text">Good job! You won!</string>
     <string name="lose_text">A disgrace! You lost!</string>
     <string name="game_text">This is the game. You choose!</string>
+    <string name="dark_mode_setting">Dark Mode</string>
 </resources>
