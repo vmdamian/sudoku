@@ -61,6 +61,10 @@
         <action
             android:id="@+id/action_win_to_mainMenu"
             app:destination="@id/mainMenu" />
+        <argument
+            android:name="score"
+            app:argType="string"
+            android:defaultValue="0" />
     </fragment>
     <fragment
         android:id="@+id/lose"
@@ -70,5 +74,8 @@
         <action
             android:id="@+id/action_lose_to_mainMenu"
             app:destination="@id/mainMenu" />
+        <argument android:name="score"
+            android:defaultValue="0"
+            app:argType="string" />
     </fragment>
 </navigation>

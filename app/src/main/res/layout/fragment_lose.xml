@@ -20,6 +20,15 @@
             android:textSize="60sp"
             android:textStyle="bold" />
 
+        <TextView
+            android:id="@+id/lose_score_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Score : 0"
+            android:textAlignment="center"
+            android:textSize="34sp"
+            android:textStyle="bold" />
+
         <Button
             android:id="@+id/button_back_lose"
             android:layout_width="match_parent"
