@@ -1,12 +1,15 @@
 package com.example.sudoku
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.sudoku.databinding.FragmentScoreboardBinding
 
 class Scoreboard : Fragment() {
@@ -21,7 +24,28 @@ class Scoreboard : Fragment() {
         binding.buttonBackScoreboard.setOnClickListener {
             findNavController().navigate(R.id.action_scoreboard_to_mainMenu)
         }
+        setupRecyclerView(binding)
 
         return binding.root
+    }
+
+    private fun setupRecyclerView(binding: FragmentScoreboardBinding) {
+        val recyclerView = binding.root.findViewById<RecyclerView>(R.id.recycler_view_scoreboard)
+        val layoutManager = binding.root.findViewById<LinearLayout>(R.id.layout_manager_recycler_scoreboard)
+        recyclerView.layoutManager = LinearLayoutManager(layoutManager.context)
+        val adapter = ScoreboardViewAdapter(getHighScoresDataset())
+        recyclerView.adapter = adapter
+    }
+
+    private fun getHighScoresDataset(): List<ScoreboardEntryModel> {
+        return listOf(
+            ScoreboardEntryModel("#", "Player name", "Score"),
+            ScoreboardEntryModel("1", "Awesome Awesome-o", "100"),
+            ScoreboardEntryModel("2", "Bro Broski", "85"),
+            ScoreboardEntryModel("3", "CC", "10"),
+            ScoreboardEntryModel("4", "Davie", "5"),
+            ScoreboardEntryModel("13", "Nobody Near Nowhere Nonending Name", "0"),
+
+        )
     }
 }
