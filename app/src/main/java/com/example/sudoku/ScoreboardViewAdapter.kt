@@ -39,7 +39,7 @@ class ScoreboardViewAdapter(private val dataSet: List<ScoreboardEntryModel>) :
         if (position == 0) {
             setupHeaderRow(viewHolder)
         }
-        viewHolder.rankView.text = dataSet[position].rank
+        viewHolder.rankView.text = dataSet[position].rank.ifEmpty { position.toString() }
         viewHolder.playerNameView.text = dataSet[position].playerName
         viewHolder.scoreView.text = dataSet[position].score
     }

@@ -22,4 +22,6 @@
     <string name="scoreboard_highest_points">Highest Points</string>
     <string name="scoreboard_best_times">Best Times</string>
     <string name="default_scoreboard_text">No player yet</string>
+    <string name="what_is_your_nickname">What is your Nickname?</string>
+    <string name="add_highscore_button">Add highscore</string>
 </resources>
