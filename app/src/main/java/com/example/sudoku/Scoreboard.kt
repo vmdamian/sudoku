@@ -37,6 +37,7 @@ class Scoreboard : Fragment() {
         recyclerView.adapter = adapter
     }
 
+    // TODO (future PR): replace mock data with an actual call to the DB collection.
     private fun getHighScoresDataset(): List<ScoreboardEntryModel> {
         return listOf(
             ScoreboardEntryModel("#", "Player name", "Score"),
