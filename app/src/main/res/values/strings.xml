@@ -18,4 +18,8 @@
     <string name="dark_mode_setting">Dark Mode</string>
     <string name="volume_setting">Music Volume</string>
     <string name="default_volume_text">100</string>
+    // Scoreboard.
+    <string name="scoreboard_highest_points">Highest Points</string>
+    <string name="scoreboard_best_times">Best Times</string>
+    <string name="default_scoreboard_text">No player yet</string>
 </resources>
