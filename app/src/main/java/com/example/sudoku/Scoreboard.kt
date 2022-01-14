@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -31,7 +32,7 @@ class Scoreboard : Fragment() {
 
     private fun setupRecyclerView(binding: FragmentScoreboardBinding) {
         val recyclerView = binding.root.findViewById<RecyclerView>(R.id.recycler_view_scoreboard)
-        val layoutManager = binding.root.findViewById<LinearLayout>(R.id.layout_manager_recycler_scoreboard)
+        val layoutManager = binding.root.findViewById<ConstraintLayout>(R.id.layout_manager_recycler_scoreboard)
         recyclerView.layoutManager = LinearLayoutManager(layoutManager.context)
         val adapter = ScoreboardViewAdapter(getHighScoresDataset())
         recyclerView.adapter = adapter
