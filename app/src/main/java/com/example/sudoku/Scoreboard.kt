@@ -2,7 +2,6 @@ package com.example.sudoku
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,25 +14,17 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sudoku.databinding.FragmentScoreboardBinding
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.GenericTypeIndicator
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
+import com.example.sudoku.service.StorageService
 
 class Scoreboard : Fragment() {
-    private val DB_URL: String = "https://mc---sudoku-project-default-rtdb.europe-west1.firebasedatabase.app"
-    private val EVENT_TAG: String = "Scoreboard event"
-
-    private lateinit var database: DatabaseReference
     private lateinit var scoreboardViewAdapter: ScoreboardViewAdapter
+    private val storageService: StorageService = StorageService()
     private val highScoresDataset: MutableList<ScoreboardEntryModel> = ArrayList(getHeaderHighScoreItems())
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        database = Firebase.database(DB_URL).reference
-
         // Inflate the layout for this fragment
         val binding = DataBindingUtil.inflate<FragmentScoreboardBinding>(
             inflater,
@@ -64,15 +55,7 @@ class Scoreboard : Fragment() {
         val score = highScoresDataset.last().score.toInt() + 1
 
         val scoreEntry = ScoreboardEntryModel("", nicknameEditText.text.toString(), score.toString())
-        val scoresReference = database.child("scoreboard").child("scorepoints")
-        val entryKey = scoresReference.push().key
-        scoresReference.updateChildren(mapOf(
-            entryKey to scoreEntry
-        )).addOnSuccessListener {
-            Log.i(EVENT_TAG, "Added new score!")
-            // The real "Submit new score" button won't require a view-model update.
-            updateHighScoresDataset()
-        }
+        storageService.writeScoreEntry(scoreEntry)
     }
 
     private fun setupRecyclerView(binding: FragmentScoreboardBinding) {
@@ -82,36 +65,20 @@ class Scoreboard : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(layoutManager.context)
         scoreboardViewAdapter = ScoreboardViewAdapter(highScoresDataset)
         recyclerView.adapter = scoreboardViewAdapter
-        updateHighScoresDataset()
+        storageService.readScoreEntries(successCallback = this::readTopScoresCallback)
     }
 
-    private fun updateHighScoresDataset() {
+    @SuppressLint("NotifyDataSetChanged")
+    private fun readTopScoresCallback(topScores: List<ScoreboardEntryModel>) {
         highScoresDataset.clear()
         highScoresDataset.addAll(getHeaderHighScoreItems())
-        addTopScores()
+        highScoresDataset.addAll(topScores)
+        scoreboardViewAdapter.notifyDataSetChanged()
     }
 
     private fun getHeaderHighScoreItems(): List<ScoreboardEntryModel> {
         return listOf(
             ScoreboardEntryModel("#", "Player name", "Score")
         )
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    private fun addTopScores() {
-        val topScoresQuery = database.child("scoreboard").child("scorepoints")
-            .orderByChild("score")
-            .limitToFirst(100)
-
-        topScoresQuery.get().addOnSuccessListener {
-            Log.i(EVENT_TAG, "Got value ${it.value}")
-            val genericTypeIndicator = object : GenericTypeIndicator<Map<String, ScoreboardEntryModel>>(){}
-            val entryByKey = it.getValue(genericTypeIndicator)!!
-            val sortedEntries = entryByKey.values.sortedWith(ScoreboardEntryModel.ScorePointsComparator)
-            highScoresDataset.addAll(sortedEntries)
-            scoreboardViewAdapter.notifyDataSetChanged()
-        }.addOnFailureListener {
-            Log.e(EVENT_TAG, "Error while fetching data", it)
-        }
     }
 }
