@@ -2,6 +2,8 @@ package com.example.sudoku
 
 import android.annotation.SuppressLint
 import android.graphics.Typeface.BOLD
+import android.graphics.Typeface.NORMAL
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,24 +38,24 @@ class ScoreboardViewAdapter(private val dataSet: List<ScoreboardEntryModel>) :
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        if (position == 0) {
-            setupHeaderRow(viewHolder)
-        }
-        viewHolder.rankView.text = dataSet[position].rank
+        setupRowStyle(viewHolder, position == 0)
+        viewHolder.rankView.text = dataSet[position].rank.ifEmpty { position.toString() }
         viewHolder.playerNameView.text = dataSet[position].playerName
         viewHolder.scoreView.text = dataSet[position].score
     }
 
-    private fun setupHeaderRow(viewHolder: ViewHolder) {
-        applyHeaderStyle(viewHolder.rankView)
-        applyHeaderStyle(viewHolder.playerNameView)
-        applyHeaderStyle(viewHolder.scoreView)
+    private fun setupRowStyle(viewHolder: ViewHolder, isHeader: Boolean) {
+        applyTextViewStyle(viewHolder.rankView, isHeader)
+        applyTextViewStyle(viewHolder.playerNameView, isHeader)
+        applyTextViewStyle(viewHolder.scoreView, isHeader)
     }
 
     @SuppressLint("ResourceAsColor")
-    private fun applyHeaderStyle(textView: TextView) {
-        textView.setTextColor(R.color.purple_500)
-        textView.setTypeface(null, BOLD)
+    private fun applyTextViewStyle(textView: TextView, isHeader: Boolean) {
+        val color = if (isHeader) R.color.purple_500 else R.color.black
+        textView.setTextColor(color)
+        val style = if (isHeader) BOLD else NORMAL
+        textView.setTypeface(null, style)
     }
 
     // Return the size of your dataset (invoked by the layout manager)
