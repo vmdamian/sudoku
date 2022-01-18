@@ -37,25 +37,8 @@ class Scoreboard : Fragment() {
             findNavController().navigate(R.id.action_scoreboard_to_mainMenu)
         }
         setupRecyclerView(binding)
-        setupAddScoreButton(binding.root)
 
         return binding.root
-    }
-
-    private fun setupAddScoreButton(view: View) {
-        val addScoreButton = view.findViewById<Button>(R.id.add_highscore_button)
-        addScoreButton.setOnClickListener{
-            addNewHighScore(view)
-        }
-    }
-
-    // Only for demo purposes.
-    private fun addNewHighScore(view: View) {
-        val nicknameEditText = view.findViewById<EditText>(R.id.highscore_nickname)
-        val score = highScoresDataset.last().score.toInt() + 1
-
-        val scoreEntry = ScoreboardEntryModel("", nicknameEditText.text.toString(), score.toString())
-        storageService.writeScoreEntry(scoreEntry)
     }
 
     private fun setupRecyclerView(binding: FragmentScoreboardBinding) {

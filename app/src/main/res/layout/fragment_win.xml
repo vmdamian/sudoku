@@ -29,6 +29,19 @@
             android:textSize="34sp"
             android:textStyle="bold" />
 
+        <EditText
+            android:id="@+id/highscore_nickname"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="@string/what_is_your_nickname"
+            android:inputType="textPersonName" />
+
+        <Button
+            android:id="@+id/add_highscore_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/add_highscore_button" />
+
         <Button
             android:id="@+id/button_back_win"
             android:layout_width="match_parent"

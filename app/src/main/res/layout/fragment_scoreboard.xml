@@ -39,19 +39,6 @@
 
         </com.google.android.material.tabs.TabLayout>
 
-        <EditText
-            android:id="@+id/highscore_nickname"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="@string/what_is_your_nickname"
-            android:inputType="textPersonName" />
-
-        <Button
-            android:id="@+id/add_highscore_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/add_highscore_button" />
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_manager_recycler_scoreboard"
             android:layout_width="match_parent"

@@ -65,6 +65,9 @@
             android:name="score"
             app:argType="string"
             android:defaultValue="0" />
+        <action
+            android:id="@+id/action_win_to_scoreboard"
+            app:destination="@id/scoreboard" />
     </fragment>
     <fragment
         android:id="@+id/lose"
