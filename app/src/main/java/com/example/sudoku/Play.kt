@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.sudoku.databinding.FragmentPlayBinding
 
-typealias WinHandler = () -> Unit
 typealias LoseHandler = () -> Unit
 typealias TickHandler = (Long) -> Unit
 
@@ -56,11 +55,7 @@ class Play : Fragment() {
     }
 
     private fun initialiseObjects() {
-        game = Sudoku(
-            initial1, solution1,
-            { win() },
-            { lose() },
-        )
+        game = Sudoku()
     }
 
     @SuppressLint("SetTextI18n")
@@ -80,6 +75,14 @@ class Play : Fragment() {
 
         game.remainingMillis().observe(viewLifecycleOwner, {
             binding.timeText.text = "Time: ${it/1000}"
+        })
+
+        game.finishStatus().observe(viewLifecycleOwner, {
+            if (it == Sudoku.GAME_WON) {
+                win()
+            } else if (it == Sudoku.GAME_LOST){
+                lose()
+            }
         })
     }
 

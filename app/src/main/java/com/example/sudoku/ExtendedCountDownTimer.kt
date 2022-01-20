@@ -7,14 +7,12 @@ import android.os.CountDownTimer
 // is only updated at every tick, so don't use this if precision is key for you, or lower the tickInterval
 // as much as possible is that is affordable in your use case.
 // In the Sudoku countdown precision is not so relevant and we can afford dropping some (less than 1000ms anyway)
-class ExtendedCountDownTimer(
-    var durationMillis : Long,
-    var tickIntervalMillis: Long, var finishHandler: LoseHandler, var tickHandler : TickHandler) {
+class ExtendedCountDownTimer(var durationMillis : Long, var finishHandler: LoseHandler, var tickHandler : TickHandler) {
 
     private lateinit var timer : CountDownTimer
 
     fun start() {
-        timer = object : CountDownTimer(durationMillis, tickIntervalMillis) {
+        timer = object : CountDownTimer(durationMillis, TICK_INTERVAL_MILLIS) {
             override fun onTick(remainingMillis: Long) {
                 durationMillis = remainingMillis
                 tickHandler(remainingMillis)
@@ -40,5 +38,9 @@ class ExtendedCountDownTimer(
 
     fun remaining(): Long {
         return durationMillis
+    }
+
+    companion object {
+        private const val TICK_INTERVAL_MILLIS = 1000L
     }
 }
