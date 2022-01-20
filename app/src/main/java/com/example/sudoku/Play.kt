@@ -1,5 +1,6 @@
 package com.example.sudoku
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.sudoku.databinding.FragmentPlayBinding
 
-typealias WinHandler = () -> Unit
 typealias LoseHandler = () -> Unit
 typealias TickHandler = (Long) -> Unit
 
@@ -45,23 +45,20 @@ class Play : Fragment() {
     }
 
     private fun win() {
-        val bundle = bundleOf("score" to game.score.toString())
+        val bundle = bundleOf("score" to game.score().value.toString())
         findNavController().navigate(R.id.action_play_to_win, bundle)
     }
 
     private fun lose() {
-        val bundle = bundleOf("score" to game.score.toString())
+        val bundle = bundleOf("score" to game.score().value.toString())
         findNavController().navigate(R.id.action_play_to_lose, bundle)
     }
 
     private fun initialiseObjects() {
-        game = Sudoku(
-            initial1, solution1, Sudoku.Difficulty.EASY, binding.scoreText, binding.timeText,
-            { win() },
-            { lose() },
-        )
+        game = Sudoku()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun initialiseVisuals() {
         val numPadGridView = binding.root.findViewById<GridView>(R.id.numpad_grid)
         numPadGridView.adapter =
@@ -71,6 +68,22 @@ class Play : Fragment() {
         gameDisplayContext = GameDisplayContext(game.current, game.solution)
         sudokuBoardGridAdapter = SudokuBoardGridAdapter(this.requireContext(), gameDisplayContext)
         sudokuGridView.adapter = sudokuBoardGridAdapter
+
+        game.score().observe(viewLifecycleOwner, {
+            binding.scoreText.text = "Score: $it"
+        })
+
+        game.remainingMillis().observe(viewLifecycleOwner, {
+            binding.timeText.text = "Time: ${it/1000}"
+        })
+
+        game.finishStatus().observe(viewLifecycleOwner, {
+            if (it == Sudoku.GAME_WON) {
+                win()
+            } else if (it == Sudoku.GAME_LOST){
+                lose()
+            }
+        })
     }
 
     private fun addDigitToGame(digit: Int) {
