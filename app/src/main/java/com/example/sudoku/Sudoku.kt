@@ -2,6 +2,9 @@ package com.example.sudoku
 
 import android.annotation.SuppressLint
 import android.widget.TextView
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 
 val solution1: Array<IntArray> = arrayOf(
     intArrayOf(2, 7, 9, 1, 3, 4, 6, 5, 8),
@@ -28,77 +31,39 @@ val initial1: Array<IntArray> = arrayOf(
 )
 
 class Sudoku() {
-    // Available difficulties.
-    enum class Difficulty {
-        EASY,
-        MEDIUM,
-        HARD
-    }
-
-    // Timings (in ms) for each difficulty.
-    private val difficultyTimings = mapOf(
-        Difficulty.EASY to 300000L,
-        Difficulty.MEDIUM to 200000L,
-        Difficulty.HARD to 100000L,
-    )
-
-    // Added score for a good pick for each difficulty.
-    private val difficultyPromotions = mapOf(
-        Difficulty.EASY to 30,
-        Difficulty.MEDIUM to 20,
-        Difficulty.HARD to 10,
-    )
-
-    // Removed score for a good pick for each difficulty.
-    private val difficultyDemotions = mapOf(
-        Difficulty.EASY to 10,
-        Difficulty.MEDIUM to 20,
-        Difficulty.HARD to 30,
-    )
-
-    // Actual game logic
     lateinit var initial: Array<IntArray>
     lateinit var solution: Array<IntArray>
     lateinit var current: Array<IntArray>
-    private lateinit var difficulty: Difficulty
-    var score: Int = 0
-
-    // Visuals.
-    private lateinit var scoreText: TextView
-    private lateinit var timeText: TextView
 
     private lateinit var win: WinHandler
     private lateinit var lose: LoseHandler
     private lateinit var timer: ExtendedCountDownTimer
 
+    private var _score = MutableLiveData(0)
+    private var _remainingMillis = MutableLiveData(GAME_TIME)
+
     @SuppressLint("SetTextI18n")
     constructor(
         initial: Array<IntArray>,
         solution: Array<IntArray>,
-        difficulty: Difficulty,
-        scoreText: TextView,
-        timeText: TextView,
         winHandler: WinHandler,
         loseHandler: LoseHandler,
     ) : this() {
+
         this.initial = initial
         this.solution = solution
-        this.difficulty = difficulty
-        this.scoreText = scoreText
-        this.timeText = timeText
         this.win = winHandler
         this.lose = loseHandler
 
         this.current = Array(9) { IntArray(9) }
 
         this.timer = ExtendedCountDownTimer(
-            difficultyTimings[Difficulty.EASY]!!,
+            GAME_TIME,
             1000,
             { lose() },
-            { remainingMillis ->
-                this.timeText.text = "${remainingMillis / 1000}"
-                this.score -= 1
-                this.scoreText.text = "Score: $score"
+            {
+                this._score.value = this._score.value?.minus(1)
+                this._remainingMillis.value = timer.remaining()
             })
 
         for (row in initial.indices) {
@@ -107,9 +72,6 @@ class Sudoku() {
                 current[row][col] = initial[row][col]
             }
         }
-
-        // Setup visuals.
-        this.scoreText.text = "Score: $score"
     }
 
     fun pause() {
@@ -127,7 +89,7 @@ class Sudoku() {
         val goodPick = inputNumber == solution[row][col]
 
         if (goodPick) {
-            score += difficultyPromotions[difficulty]!!
+            _score.value = _score.value?.plus(PROMOTION_SCORE)
 
             timer.extend(5000)
 
@@ -135,10 +97,9 @@ class Sudoku() {
                 win()
             }
         } else {
-            score -= difficultyDemotions[difficulty]!!
+            _score.value = _score.value?.minus(DEMOTION_SCORE)
         }
 
-        scoreText.text = "Score: $score"
         return
     }
 
@@ -152,5 +113,19 @@ class Sudoku() {
             }
         }
         return true
+    }
+
+    fun score() : LiveData<Int> {
+        return _score
+    }
+
+    fun remainingMillis() : LiveData<Long> {
+        return _remainingMillis
+    }
+
+    companion object {
+        private const val GAME_TIME = 300000L
+        private const val PROMOTION_SCORE = 30
+        private const val DEMOTION_SCORE = 10
     }
 }

@@ -8,7 +8,7 @@ import android.os.CountDownTimer
 // as much as possible is that is affordable in your use case.
 // In the Sudoku countdown precision is not so relevant and we can afford dropping some (less than 1000ms anyway)
 class ExtendedCountDownTimer(
-    var durationMillis: Long,
+    var durationMillis : Long,
     var tickIntervalMillis: Long, var finishHandler: LoseHandler, var tickHandler : TickHandler) {
 
     private lateinit var timer : CountDownTimer
@@ -36,5 +36,9 @@ class ExtendedCountDownTimer(
 
     fun pause() {
         timer.cancel()
+    }
+
+    fun remaining(): Long {
+        return durationMillis
     }
 }
