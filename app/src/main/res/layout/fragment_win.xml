@@ -43,10 +43,17 @@
             android:text="@string/add_highscore_button" />
 
         <Button
+            android:text="@string/share_score"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/share_score_button" />
+
+        <Button
             android:id="@+id/button_back_win"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/back_button_text" />
+
     </LinearLayout>
 </FrameLayout>
 </layout>

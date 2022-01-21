@@ -1,6 +1,8 @@
 package com.example.sudoku
-
+import android.util.Log
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -39,6 +41,9 @@ class Win : Fragment() {
         setupAddScoreButton(binding.root)
 
         binding.winScoreText.text = "Score $score"
+        binding.shareScoreButton.setOnClickListener {
+            composeMessage("Just finished another Sudoku game. My score was: $score")
+        }
 
         return binding.root
     }
@@ -56,5 +61,17 @@ class Win : Fragment() {
         val score = this.score?:"0"
         val scoreEntry = ScoreboardEntryModel("", nicknameEditText.text.toString(), score)
         storageService.writeScoreEntry(scoreEntry)
+    }
+
+    private fun composeMessage(message: String) {
+        val share = Intent.createChooser(Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, message)
+            type="text/plain"
+            putExtra(Intent.EXTRA_TITLE, "My Sudoku Score")
+
+            flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+        }, null)
+        startActivity(share)
     }
 }
